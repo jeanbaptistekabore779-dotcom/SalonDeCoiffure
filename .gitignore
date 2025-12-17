@@ -41,3 +41,6 @@ media/
 
 # VS Code settings
 .vscode/
+
+
+staticfiles/
