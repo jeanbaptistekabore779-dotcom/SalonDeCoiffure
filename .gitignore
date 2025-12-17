@@ -22,3 +22,22 @@ media/
 
 # Static files (optionnel si tu gères avec collectstatic)
 staticfiles/
+
+
+
+# Python
+*.pyc
+__pycache__/
+*.pyo
+
+# Virtual environment
+.venv/
+
+# Database
+db.sqlite3
+
+# Media files
+media/
+
+# VS Code settings
+.vscode/
