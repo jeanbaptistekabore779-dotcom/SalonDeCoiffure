@@ -1,0 +1,24 @@
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.sqlite3
+
+# Environnements virtuels
+.venv/
+env/
+venv/
+
+# Media / uploads
+media/
+
+# IDE / editor
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Static files (optionnel si tu gères avec collectstatic)
+staticfiles/
