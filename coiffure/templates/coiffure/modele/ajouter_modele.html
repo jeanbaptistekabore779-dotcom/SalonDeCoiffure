@@ -1,0 +1,76 @@
+{% extends "coiffure/base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+
+<style>
+    .card {
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        padding: 25px;
+        background: #ffffff;
+        max-width: 700px;
+        margin: 20px auto;
+    }
+    h2 {
+        font-weight: bold;
+        color: #3d5a80;
+        margin-bottom: 20px;
+    }
+    label {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    .btn {
+        border-radius: 10px;
+        padding: 10px 20px;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="card">
+        <h2>Ajouter un modèle</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label>Nom du modèle</label>
+                {{ form.nom|add_class:"form-control" }}
+            </div>
+
+            <div class="mb-3">
+                <label>Prix (FCFA)</label>
+                {{ form.prix|add_class:"form-control" }}
+            </div>
+
+            <div class="mb-3">
+                <label>Durée (minutes)</label>
+                {{ form.duree|add_class:"form-control" }}
+            </div>
+
+            <div class="mb-3">
+                <label>Description</label>
+                {{ form.description|add_class:"form-control" }}
+            </div>
+
+            <div class="mb-3">
+                <label>Photo</label>
+                {{ form.photo|add_class:"form-control" }}
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <a href="{% url 'liste_modeles' %}" class="btn btn-secondary">Retour</a>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(to right, #e7eced, #6988a8);
+    }
+</style>
+
+{% endblock %}

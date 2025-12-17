@@ -1,0 +1,101 @@
+{% extends "coiffure/base.html" %}
+{% load static %}
+{% load widget_tweaks %}  <!-- pour ajouter facilement des classes -->
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <!-- Header -->
+            <header class="text-center mb-5">
+                <h1 class="fw-bolder text-primary mb-2 display-6">
+                    <i class="fas fa-money-check-alt me-3"></i> Enregistrer un Paiement
+                </h1>
+                <p class="text-secondary lead">Renseignez les informations de la transaction.</p>
+            </header>
+
+            <!-- Card -->
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <!-- Card Header -->
+                <div class="card-header bg-success text-white rounded-top-4 py-3">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-receipt me-2"></i> Détails du Paiement
+                    </h5>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body p-sm-5 p-4">
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <!-- Non field errors -->
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.non_field_errors %}
+                                    <p class="mb-0">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <!-- CLIENT -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark">{{ form.client.label }}</label>
+                            {{ form.client|add_class:"form-select" }}
+                        </div>
+
+                        <!-- PRESTATION -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark">{{ form.prestation.label }}</label>
+                            {{ form.prestation|add_class:"form-select" }}
+                        </div>
+
+                        <!-- MONTANT -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark">{{ form.montant.label }}</label>
+                            <div class="input-group">
+                                {{ form.montant|add_class:"form-control" }}
+                                <span class="input-group-text">FCFA</span>
+                            </div>
+                        </div>
+
+                        <!-- MODE DE PAIEMENT -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark">{{ form.mode_paiement.label }}</label>
+                            {{ form.mode_paiement|add_class:"form-select" }}
+                        </div>
+
+                        <!-- STATUT -->
+                        <div class="mb-5">
+                            <label class="form-label fw-bold text-dark">{{ form.statut.label }}</label>
+                            {{ form.statut|add_class:"form-select" }}
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="d-flex justify-content-between pt-3 border-top">
+                            <a href="{% url 'liste_paiements' %}" class="btn btn-outline-secondary btn-lg px-4">
+                                <i class="fas fa-arrow-left me-2"></i> Annuler
+                            </a>
+
+                            <button type="submit" class="btn btn-success btn-lg px-5">
+                                <i class="fas fa-check-circle me-2"></i> Valider
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<style>
+    body {
+        background: linear-gradient(to right, #e7eced, #6988a8);
+    }
+</style>
+{% endblock %}

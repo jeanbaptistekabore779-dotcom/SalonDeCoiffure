@@ -1,0 +1,47 @@
+{% extends "coiffure/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="card shadow-lg rounded-4 p-4">
+        <h2 class="fw-bold mb-4"><i class="fas fa-info-circle me-2 text-success"></i>Détails du Paiement</h2>
+
+        <div class="mb-3"><strong></strong> {{ paiement.id }}</div>
+        <div class="mb-3"><strong>Date :</strong> {{ paiement.date_paiement|date:"d/m/Y" }}</div>
+        <div class="mb-3"><strong>Client :</strong> {{ paiement.client.nom }}</div>
+        <div class="mb-3"><strong>Montant :</strong> {{ paiement.montant|floatformat:2 }} FCFA</div>
+        <div class="mb-3">
+            <strong>Mode de paiement :</strong> 
+            <span class="badge 
+                {% if paiement.mode_paiement == 'espèces' %}bg-secondary
+                {% elif paiement.mode_paiement == 'mobile' %}bg-info text-dark
+                {% else %}bg-primary
+                {% endif %}">
+                {{ paiement.get_mode_paiement_display }}
+            </span>
+        </div>
+        <div class="mb-3">
+            <strong>Statut :</strong>
+            {% if paiement.statut == "payé" %}
+                <span class="badge bg-success px-3 py-2 rounded-pill">
+                    <i class="fas fa-check-circle"></i> Payé
+                </span>
+            {% else %}
+                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">
+                    <i class="fas fa-clock"></i> En attente
+                </span>
+            {% endif %}
+        </div>
+
+        <a href="{% url 'historique_paiements' %}" class="btn btn-secondary mt-4">
+            <i class="fas fa-arrow-left me-2"></i> Retour à l’historique
+        </a>
+    </div>
+</div>
+<style>
+    body {
+        background: linear-gradient(to right, #e7eced, #6988a8);
+    }
+</style>
+{% endblock %}

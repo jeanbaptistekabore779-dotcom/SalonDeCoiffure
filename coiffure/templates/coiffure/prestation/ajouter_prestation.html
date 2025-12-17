@@ -1,0 +1,102 @@
+{% extends "coiffure/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary"><i class="fas fa-plus-circle me-2"></i> Ajouter une Prestation</h2>
+        <a href="{% url 'liste_prestations' %}" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i> Retour à la liste</a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow-lg p-4" style="border-radius: 1rem; background: #f8f9fa;">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row g-3">
+
+                {% for field in form %}
+                    {% if field.name != "montant" %}
+                    <div class="col-md-6 mb-3">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-danger small">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+
+                <div class="col-md-6 mb-3">
+                    {{ form.montant.label_tag }}
+                    <div class="input-group">
+                        {{ form.montant }}
+                        <span class="input-group-text bg-light fw-bold">FCFA</span>
+                    </div>
+                    {% if form.montant.errors %}
+                        <div class="text-danger small">{{ form.montant.errors }}</div>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <div class="d-flex justify-content-end mt-4">
+                <button type="submit" class="btn btn-success btn-lg me-2">
+                    <i class="fas fa-check-circle me-2"></i> Enregistrer
+                </button>
+                <a href="{% url 'liste_prestations' %}" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-times-circle me-2"></i> Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const serviceSelect = document.getElementById("id_service");
+    const montantInput  = document.getElementById("id_montant");
+
+    // Définir le prix pour chaque service côté template
+    const servicePrix = {
+        {% for s in services %}
+        "{{ s.id }}": "{{ s.prix }}",
+        {% endfor %}
+    };
+
+    if (serviceSelect && montantInput) {
+        // Quand on change de service → le prix s'affiche automatiquement
+        serviceSelect.addEventListener("change", function() {
+            montantInput.value = servicePrix[this.value] ?? "";
+        });
+
+        // Si un service est déjà sélectionné (édition par exemple)
+        if (serviceSelect.value) {
+            montantInput.value = servicePrix[serviceSelect.value] ?? "";
+        }
+    }
+</script>
+
+<style>
+    body {
+        background: linear-gradient(to right, #e7eced, #6988a8);
+    }
+    .card label {
+        font-weight: 500;
+    }
+    .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(40,167,69,.25);
+        border-color: #28a745;
+    }
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+</style>
+{% endblock %}

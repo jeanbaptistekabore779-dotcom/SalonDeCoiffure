@@ -1,0 +1,66 @@
+{% extends "coiffure/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    Ajouter un Nouveau Client
+                </div>
+                <div class="card-body p-4">
+                    <form action="{% url 'ajouter_client' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Nom</label>
+                            <input type="text" name="nom" class="form-control" placeholder="Nom du client" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Prénom</label>
+                            <input type="text" name="prenom" class="form-control" placeholder="Prénom du client" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Téléphone</label>
+                            <input type="text" name="telephone" class="form-control" placeholder="Ex: 70xxxxxx" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" placeholder="exemple@mail.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Date d'inscription</label>
+                            <input type="date" name="date_inscription" class="form-control">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Statut</label>
+                            <select name="statut" class="form-select">
+                                <option value="actif">Actif</option>
+                                <option value="inactif">Inactif</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 mb-2">Enregistrer</button>
+                        <a href="{% url 'liste_clients' %}" class="btn btn-primary w-100">Retour à la liste</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(to right, #e7eced, #6988a8);
+    }
+</style>
+{% endblock %}

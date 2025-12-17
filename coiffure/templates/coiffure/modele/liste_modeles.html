@@ -1,0 +1,93 @@
+{% extends "coiffure/base.html" %}
+{% block content %}
+
+<style>
+  .card {
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .card h2 {
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 12px;
+    text-align: left;
+  }
+  thead {
+    background-color: #3d5a80;
+    color: #fff;
+  }
+  tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  tbody tr:hover {
+    background-color: #dbe6f1;
+  }
+  img {
+    border-radius: 8px;
+  }
+  .btn {
+    border-radius: 8px;
+  }
+</style>
+
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Liste des modèles</h2>
+    <a href="{% url 'ajouter_modele' %}" class="btn btn-primary">Ajouter un modèle</a>
+  </div>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prix</th>
+          <th>Durée</th>
+          <th>Description</th>
+          <th>Photo</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for modele in modeles %}
+          <tr>
+            <td>{{ modele.nom }}</td>
+            <td>{{ modele.prix|floatformat:2 }} FCFA</td>
+            <td>{{ modele.duree }} min</td>
+            <td>{{ modele.description }}</td>
+            <td>
+              {% if modele.photo %}
+                <img src="{{ modele.photo.url }}" width="50" alt="{{ modele.nom }}">
+              {% else %}
+                -
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'modifier_modele' modele.id %}" class="btn btn-sm btn-warning">Modifier</a>
+              <a href="{% url 'supprimer_modele' modele.id %}" class="btn btn-sm btn-danger" 
+                 onclick="return confirm('Voulez-vous vraiment supprimer ce modèle ?');">Supprimer</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="6" class="text-center">Aucun modèle trouvé.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<style>
+    body {
+        background: linear-gradient(to right, #e7eced, #6988a8);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "coiffure/base.html" %}
+{% load static %}
+
+{% block title %}Ajouter Service{% endblock %}
+
+{% block content %}
+<style>
+    /* Formulaire centralisé et limité */
+    .card-header {
+        background: #3a60d3;
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.3rem;
+        text-align: center;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+
+    .card {
+        border-radius: 15px;
+    }
+
+    .form-label {
+        font-weight: 500;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .btn-primary, .btn-secondary {
+        border-radius: 30px;
+        padding-left: 25px;
+        padding-right: 25px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn-primary:hover {
+        background-color: #2e4bbd;
+        border-color: #2e4bbd;
+    }
+
+    .btn-secondary:hover {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    /* Espacement entre champs */
+    .mb-3, .mt-4 {
+        margin-bottom: 1rem !important;
+    }
+</style>
+
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header">
+                    🛠️ Ajouter un Service
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        {{ form.as_p }}
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'liste_services' %}" class="btn btn-secondary">⬅ Retour</a>
+                            <button type="submit" class="btn btn-primary">Enregistrer Service</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(to right, #e7eced, #6988a8);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "coiffure/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5>Ajouter un Produit</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Libellé :</label>
+                    {{ form.nom|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description :</label>
+                    {{ form.description|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Prix unitaire (FCFA) :</label>
+                    {{ form.prix_unitaire|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Stock :</label>
+                    {{ form.stock|add_class:"form-control" }}
+                </div>
+                <button type="submit" class="btn btn-success">Ajouter</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(to right, #e7eced, #6988a8);
+    }
+</style>
+{% endblock %}

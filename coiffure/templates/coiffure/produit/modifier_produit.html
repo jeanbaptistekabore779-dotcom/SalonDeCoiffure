@@ -1,0 +1,61 @@
+{% extends "coiffure/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container my-5">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-success text-white text-center">
+                    Modifier le produit
+                </div>
+
+                <div class="card-body p-4">
+                    <form action="{% url 'modifier_produit' produit.id %}" method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Nom</label>
+                            <input type="text" name="nom" class="form-control" value="{{ produit.nom }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="description" class="form-control" rows="3" required>{{ produit.description }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Prix unitaire (FCFA)</label>
+                            <input type="number" name="prix_unitaire" class="form-control" value="{{ produit.prix_unitaire }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Stock</label>
+                            <input type="number" name="stock" class="form-control" value="{{ produit.stock }}" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 mb-2">Modifier</button>
+                        <a href="{% url 'liste_produits' %}" class="btn btn-primary w-100">Retour à la liste</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(to right, #e7eced, #6988a8);
+    }
+</style>
+{% endblock %}

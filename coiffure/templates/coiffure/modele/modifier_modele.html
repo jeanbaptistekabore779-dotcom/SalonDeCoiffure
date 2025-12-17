@@ -1,0 +1,98 @@
+{% extends "coiffure/base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+
+<style>
+.card {
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 25px;
+    background: #fff;
+}
+.card h2 {
+    font-weight: bold;
+    text-align: center;
+    color: #0c0f12; /* Couleur du titre */
+    font-family: 'Roboto', sans-serif; /* Police du titre */
+    font-size: 28px; /* Taille du titre, optionnel */
+    background-color: #3665a4;
+    border-radius: 10px;
+}
+
+.btn-success {
+    background-color: #3d5a80;
+    border: none;
+    padding: 10px 18px;
+    font-weight: 600;
+    color: #fff;
+}
+.btn-success:hover {
+    background-color: #2e4664;
+}
+.btn-secondary {
+    padding: 10px 18px;
+    color: #fff;
+    background-color: #6c757d;
+    border: none;
+}
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+.mb-3 {
+    margin-bottom: 15px;
+}
+label {
+    font-weight: bold;
+    color: #34495e; /* Couleur des labels */
+}
+input, textarea, select {
+    color: #2c3e50; /* Couleur du texte dans les champs */
+}
+</style>
+
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card" style="width: 550px;">
+        <h2 class="mb-4">Modifier le modèle</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Ordre clair des champs -->
+            <div class="mb-3">
+                {{ form.nom.label_tag }}
+                {{ form.nom|add_class:"form-control" }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.prix.label_tag }}
+                {{ form.prix|add_class:"form-control" }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.duree.label_tag }}
+                {{ form.duree|add_class:"form-control" }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.description.label_tag }}
+                {{ form.description|add_class:"form-control" }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.photo.label_tag }}
+                {{ form.photo }}
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <button class="btn btn-success">Mettre à jour</button>
+                <a href="{% url 'liste_modeles' %}" class="btn btn-secondary">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+<style>
+    body {
+        background: linear-gradient(to right, #e7eced, #6988a8);
+    }
+</style>
+{% endblock %}

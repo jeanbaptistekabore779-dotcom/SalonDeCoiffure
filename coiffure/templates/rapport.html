@@ -1,0 +1,92 @@
+{% extends "coiffure/base.html" %}
+{% load static %}
+
+{% block title %}Rapport des salons{% endblock %}
+
+{% block content %}
+
+<style>
+    @keyframes fadeInUp { from { opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+    .rapport-container { background:white; padding:30px; border-radius:20px; max-width:900px; margin:20px auto; animation:fadeInUp 0.8s ease-out; box-shadow:0px 10px 25px rgba(0,0,0,0.15);}
+    h1, h2 { text-align:center; color:#0984e3; }
+    table { width:100%; border-collapse:collapse; margin-top:15px; }
+    table th { background:#0984e3; color:white; padding:10px; }
+    table td { background:#f1f2f6; padding:10px; border-bottom:3px solid white; }
+    .total-box { margin-top:20px; padding:15px; background:#dfe6e9; border-radius:10px; font-size:18px; }
+    #graphBox { margin-top:30px; padding:20px; background:#ffffff; border-radius:15px; box-shadow:0px 5px 20px rgba(0,0,0,0.1); }
+</style>
+
+<div class="rapport-container">
+    <h1>Rapport des Salons</h1>
+    <p style="text-align:center"><strong>Date :</strong> {{ date|date:"d/m/Y" }}</p>
+
+    {% for rapport in rapport_data %}
+        <h2>{{ rapport.salon.nom }}</h2>
+        <p><strong>Adresse :</strong> {{ rapport.salon.adresse }}</p>
+        <p><strong>Téléphone :</strong> {{ rapport.salon.telephone }}</p>
+
+        <h3>Prestations</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Service</th>
+                    <th>Prix</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in rapport.prestations %}
+                    <tr>
+                        <td>{{ item.client.nom }} {{ item.client.prenom }}</td>
+                        <td>{{ item.service.libelle }}</td>
+                        <td>{{ item.montant }} F CFA</td>
+                        <td>{{ item.date_prestation|date:"d/m/Y" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4" style="text-align:center;">Aucune prestation</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="total-box">
+            <strong>Total encaissé :</strong> {{ rapport.total }} F CFA
+        </div>
+
+        <div id="graphBox">
+            <h3>Graphique des recettes</h3>
+            <canvas id="graphSalon{{ forloop.counter }}" height="120"></canvas>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            const ctx{{ forloop.counter }} = document.getElementById('graphSalon{{ forloop.counter }}');
+            new Chart(ctx{{ forloop.counter }}, {
+                type: 'line',
+                data: {
+                    labels: {{ rapport.labels|safe }},
+                    datasets: [{
+                        label: 'Recettes (FCFA)',
+                        data: {{ rapport.data|safe }},
+                        borderWidth: 3,
+                        borderColor: 'rgba(9,132,227,1)',
+                        backgroundColor: 'rgba(9,132,227,0.2)',
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: 'rgba(9,132,227,1)',
+                        fill: true
+                    }]
+                },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+        </script>
+
+        <hr style="margin:40px 0; border-top:2px solid #ccc;">
+    {% endfor %}
+</div>
+
+<style>
+    body { background: linear-gradient(to right, #e7eced, #6988a8); }
+</style>
+
+{% endblock %}

@@ -1,0 +1,136 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détail du Salon</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+
+    
+<style>
+    body {
+        background: linear-gradient(to right, #e7eced, #6988a8);
+    }
+</style>
+    <style>
+        .salon-header {
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+        }
+        .info-box {
+            border-left: 4px solid #0d6efd;
+            padding-left: 15px;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-4">
+
+    <!-- Titre + Bouton retour -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold">{{ salon.nom }}</h2>
+        <a href="{% url 'liste_salons' %}" class="btn btn-secondary">← Retour</a>
+    </div>
+
+    <!-- Photo du salon -->
+    {% if salon.photo %}
+        <div class="salon-header mb-4"
+             style="background-image: url('{{ salon.photo.url }}');">
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            Aucune photo disponible pour ce salon.
+        </div>
+    {% endif %}
+
+    <!-- Informations du salon -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+
+            <h4 class="mb-3">Informations générales</h4>
+
+            <div class="row">
+                <div class="col-md-6 mb-3 info-box">
+                    <h6 class="text-secondary">Adresse</h6>
+                    <p class="fw-bold">{{ salon.adresse }}</p>
+                </div>
+
+                <div class="col-md-6 mb-3 info-box">
+                    <h6 class="text-secondary">Téléphone</h6>
+                    <p class="fw-bold">{{ salon.telephone }}</p>
+                </div>
+
+                <div class="col-md-6 mb-3 info-box">
+                    <h6 class="text-secondary">Email</h6>
+                    <p class="fw-bold">{{ salon.email }}</p>
+                </div>
+
+                <div class="col-md-6 mb-3 info-box">
+                    <h6 class="text-secondary">Date de création</h6>
+                    <p class="fw-bold">
+                        {% if salon.date_creation %}
+                            {{ salon.date_creation }}
+                        {% else %}
+                            Non renseignée
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="col-md-6 mb-3 info-box">
+                    <h6 class="text-secondary">Horaires</h6>
+                    <p class="fw-bold">
+                        {% if salon.horaire_ouverture and salon.horaire_fermeture %}
+                            De {{ salon.horaire_ouverture }} à {{ salon.horaire_fermeture }}
+                        {% else %}
+                            Non renseignés
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="col-md-6 mb-3 info-box">
+                    <h6 class="text-secondary">Statut</h6>
+                    {% if salon.actif %}
+                        <span class="badge bg-success">Actif</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Inactif</span>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Description du salon -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4>Description</h4>
+            <p class="mt-2">
+                {% if salon.description %}
+                    {{ salon.description }}
+                {% else %}
+                    <em>Aucune description disponible.</em>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+<div class="text-center mb-5">
+    <a href="{% url 'modifier_salon' salon.id %}" class="btn btn-warning me-2">
+        Modifier le salon
+    </a>
+    <a href="{% url 'supprimer_salon' salon.id %}" class="btn btn-danger"
+        onclick="return confirm('Voulez-vous vraiment supprimer ce salon ?');">
+        Supprimer
+    </a>
+</div>
+</div>
+
+</body>
+</html>

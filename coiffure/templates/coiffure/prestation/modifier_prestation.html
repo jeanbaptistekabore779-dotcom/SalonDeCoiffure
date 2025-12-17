@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier {{ prestation.nom }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        
+
+        body {
+            background: linear-gradient(to right, #e7eced, #6988a8);
+        }
+
+        .form-check-input:checked {
+            background-color: #198754; /* Vert pour Actif */
+            border-color: #198754;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            <header class="text-center mb-5">
+                <h1 class="fw-bolder text-warning mb-2 display-6">
+                    <i class="fas fa-scissors me-3"></i> Modifier la Prestation
+                </h1>
+                <p class="text-secondary lead">Édition de l'élément : **{{ prestation.nom }}**</p>
+            </header>
+
+            <div class="card shadow-lg border-0 rounded-4">
+                
+                <div class="card-header bg-warning text-dark rounded-top-4 py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-edit me-2"></i> Détails de l'édition</h5>
+                </div>
+                
+                <div class="card-body p-sm-5 p-4">
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {% for error in form.non_field_errors %}
+                                    <p class="mb-0">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <label for="{{ form.nom.id_for_label }}" class="form-label fw-bold">{{ form.nom.label }}</label>
+                                {{ form.nom }}
+                                {% for error in form.nom.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="{{ form.prix.id_for_label }}" class="form-label fw-bold">{{ form.prix.label }} (CFA)</label>
+                                {{ form.prix }}
+                                {% for error in form.prix.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.description.id_for_label }}" class="form-label fw-bold">{{ form.description.label }}</label>
+                            {{ form.description }}
+                            {% for error in form.description.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                        </div>
+
+                        <div class="row g-4 mb-5 align-items-end">
+                            <div class="col-md-6">
+                                <label for="{{ form.duree.id_for_label }}" class="form-label fw-bold">{{ form.duree.label }} (minutes)</label>
+                                {{ form.duree }}
+                                {% for error in form.duree.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-check form-switch fs-5 pt-md-3">
+                                    {{ form.actif }}
+                                    <label class="form-check-label fw-bold {% if prestation.actif %}text-success{% else %}text-danger{% endif %}" for="{{ form.actif.id_for_label }}">
+                                        {{ form.actif.label }}
+                                    </label>
+                                    <p class="form-text mb-0 text-muted">Statut actuel : **{% if prestation.actif %}Actif{% else %}Inactif{% endif %}**</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="d-flex justify-content-between pt-3 border-top">
+                            <a href="{% url 'liste_prestations' %}" class="btn btn-outline-secondary btn-lg px-4 rounded-3">
+                                <i class="fas fa-arrow-left me-2"></i> Annuler
+                            </a>
+
+                            <button type="submit" class="btn btn-warning btn-lg px-5 rounded-3 shadow-lg text-dark">
+                                <i class="fas fa-save me-2"></i> Enregistrer les Changements
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{% extends "coiffure/base.html" %}
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2>Merci d’avoir utilisé notre application !</h2>
+    <p>Vous êtes maintenant déconnecté.</p>
+    <a href="{% url 'login' %}" class="btn btn-primary mt-3">Se reconnecter</a>
+    <!-- Optionnel : tenter de fermer l'onglet -->
+    <button class="btn btn-secondary mt-2" onclick="window.close();">Fermer l'onglet</button>
+</div>
+{% endblock %}

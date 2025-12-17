@@ -1,0 +1,71 @@
+{% extends "coiffure/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Liste des Prestations</h2>
+        <a href="{% url 'ajouter_prestation' %}" class="btn btn-success">+ Ajouter Prestation</a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Client</th>
+                    <th>Service</th>
+                    <th>Employé</th>
+                    <th>Date</th>
+                    <th>Heure</th>
+                    <th>Statut</th>
+                    <th>Montant</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prestation in prestations %}
+                <tr>
+                    <td>{{ prestation.client.nom }} {{ prestation.client.prenom }}</td>
+                    <td>{{ prestation.service }}</td>
+                    <td>{{ prestation.employe|default:"-" }}</td>
+                    <td>{{ prestation.date_prestation|date:"d/m/Y" }}</td>
+                    <td>{{ prestation.heure_prestation|time:"H:i" }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if prestation.statut == 'planifié' %}bg-warning
+                            {% elif prestation.statut == 'effectué' %}bg-success
+                            {% elif prestation.statut == 'annulé' %}bg-danger
+                            {% endif %}">
+                            {{ prestation.statut }}
+                        </span>
+                    </td>
+                    <td>{{ prestation.montant }} F CFA</td>
+                    <td>
+                        <a href="{% url 'modifier_prestation' prestation.id %}" class="btn btn-sm btn-primary">Modifier</a>
+                        <a href="{% url 'supprimer_prestation' prestation.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Confirmer la suppression ?');">Supprimer</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center">Aucune prestation disponible</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<style>
+    body {
+        background: linear-gradient(to right, #e7eced, #6988a8);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "coiffure/base.html" %}
+{% load static %}
+
+{% block title %}Liste des Employés{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-12 col-md-5">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">📋 Liste des Employés</h4>
+                    <a href="{% url 'ajouter_employe' %}" class="btn btn-light btn-sm">
+                        + Ajouter un Employé
+                    </a>
+                </div>
+
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover text-center align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Téléphone</th>
+                                    <th>Salon</th>
+                                    <th>Date de naissance</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for employe in employes %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ employe.nom }}</td>
+                                    <td>{{ employe.prenom }}</td>
+                                    <td>{{ employe.telephone }}</td>
+                                    <td>{{ employe.salon.nom }}</td>
+                                    <td>{{ employe.date_naissance|date:"d/m/Y" }}</td>
+                                    <td>
+                                        {% if employe.actif %}
+                                        <span class="badge bg-success">Actif</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary">Inactif</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'modifier_employe' employe.id %}" class="btn btn-warning btn-sm mb-1">✏ Modifier</a>
+                                        <a href="{% url 'supprimer_employe' employe.id %}" class="btn btn-danger btn-sm mb-1"
+                                           onclick="return confirm('Voulez-vous vraiment supprimer cet employé ?');">🗑 Supprimer</a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted">Aucun employé trouvé.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(to right, #e7eced, #6988a8);
+    }
+</style>
+{% endblock %}

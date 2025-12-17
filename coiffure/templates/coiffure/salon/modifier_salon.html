@@ -1,0 +1,122 @@
+{% extends "coiffure/base.html" %}
+{% load form_tags %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Modifier Salon</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+
+                        <!-- Nom -->
+                        <div class="mb-3">
+                            {{ form.nom.label_tag }}
+                            {{ form.nom|add_class:"form-control" }}
+                            {% if form.nom.errors %}
+                                <div class="text-danger small">{{ form.nom.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Adresse -->
+                        <div class="mb-3">
+                            {{ form.adresse.label_tag }}
+                            {{ form.adresse|add_class:"form-control" }}
+                            {% if form.adresse.errors %}
+                                <div class="text-danger small">{{ form.adresse.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Téléphone et Email -->
+                        <div class="row mb-3">
+                            <div class="col">
+                                {{ form.telephone.label_tag }}
+                                {{ form.telephone|add_class:"form-control" }}
+                                {% if form.telephone.errors %}
+                                    <div class="text-danger small">{{ form.telephone.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col">
+                                {{ form.email.label_tag }}
+                                {{ form.email|add_class:"form-control" }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger small">{{ form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Horaires -->
+                        <div class="row mb-3">
+                            <div class="col">
+                                {{ form.horaire_ouverture.label_tag }}
+                                {{ form.horaire_ouverture|add_class:"form-control" }}
+                                {% if form.horaire_ouverture.errors %}
+                                    <div class="text-danger small">{{ form.horaire_ouverture.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col">
+                                {{ form.horaire_fermeture.label_tag }}
+                                {{ form.horaire_fermeture|add_class:"form-control" }}
+                                {% if form.horaire_fermeture.errors %}
+                                    <div class="text-danger small">{{ form.horaire_fermeture.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Date création -->
+                        <div class="mb-3">
+                            {{ form.date_creation.label_tag }}
+                            {{ form.date_creation|add_class:"form-control" }}
+                            {% if form.date_creation.errors %}
+                                <div class="text-danger small">{{ form.date_creation.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Actif -->
+                        <div class="form-check mb-3">
+                            {{ form.actif|add_class:"form-check-input" }}
+                            {{ form.actif.label_tag|add_class:"form-check-label" }}
+                            {% if form.actif.errors %}
+                                <div class="text-danger small">{{ form.actif.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            {{ form.description.label_tag }}
+                            {{ form.description|add_class:"form-control" }}
+                            {% if form.description.errors %}
+                                <div class="text-danger small">{{ form.description.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Image -->
+                        <div class="mb-3">
+                            {{ form.image.label_tag }}
+                            {% if salon.image %}
+                                <div class="mb-2">
+                                    <img src="{{ salon.image.url }}" alt="Image actuelle" class="img-thumbnail" style="max-width: 150px;">
+                                </div>
+                            {% endif %}
+                            {{ form.image|add_class:"form-control" }}
+                            {% if form.image.errors %}
+                                <div class="text-danger small">{{ form.image.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">Modifier</button>
+                            <a href="{% url 'liste_salons' %}" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

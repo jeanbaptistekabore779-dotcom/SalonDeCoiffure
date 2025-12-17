@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des salons</title>
+</head>
+<body>
+    {% extends "coiffure/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .salon-card { transition: 0.2s ease; border-radius: 12px; overflow: hidden; }
+    .salon-card:hover { transform: translateY(-5px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+    .salon-img { height: 200px; object-fit: cover; width: 100%; }
+    .salon-title { font-weight: 600; color: #333; }
+    .salon-info { font-size: 0.9rem; color: #555; }
+</style>
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Liste des Salons</h2>
+        <a href="{% url 'ajouter_salon' %}" class="btn btn-success">
+            + Ajouter un Salon
+        </a>
+    </div>
+
+    <div class="row">
+
+        {% for salon in salons %}
+        <div class="col-md-4 mb-4">
+            <div class="card salon-card h-100">
+
+                {% if salon.image %}
+                <img src="{{ salon.image.url }}" class="salon-img" alt="Image du salon">
+                {% else %}
+                <img src="{% static 'images/default_salon.png' %}" class="salon-img">
+                {% endif %}
+
+                <div class="card-body">
+
+                    <h5 class="salon-title">{{ salon.nom }}</h5>
+
+                    <p class="salon-info">
+                        <strong>Adresse :</strong> {{ salon.adresse }} <br>
+                        <strong>Téléphone :</strong> {{ salon.telephone }} <br>
+                        <strong>Email :</strong> {{ salon.email }} <br>
+                        <strong>Ouverture :</strong> {{ salon.horaire_ouverture }} <br>
+                        <strong>Fermeture :</strong> {{ salon.horaire_fermeture }} <br>
+                    </p>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'detail_salon' salon.id %}" class="btn btn-primary btn-sm">Voir</a>
+                        <a href="{% url 'modifier_salon' salon.id %}" class="btn btn-warning btn-sm">Modifier</a>
+                        <a href="{% url 'supprimer_salon' salon.id %}" class="btn btn-danger btn-sm"
+                           onclick="return confirm('Supprimer ce salon ?')">Supprimer</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<style>
+    body {
+        background: linear-gradient(to right, #e7eced, #6988a8);
+    }
+</style>
+
+{% endblock %}
+
+</body>
+</html>

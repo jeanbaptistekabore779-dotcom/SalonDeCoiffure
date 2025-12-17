@@ -1,0 +1,77 @@
+{% extends 'coiffure/base.html' %}
+
+{% block content %}
+<div class="register-page">
+    <div class="form-container">
+        <h3>Créer votre compte!</h3>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">Prénom</label>
+                {{ form.first_name }}
+                <small class="text-danger">{{ form.first_name.errors }}</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Nom</label>
+                {{ form.last_name }}
+                <small class="text-danger">{{ form.last_name.errors }}</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Adresse email</label>
+                {{ form.email }}
+                <div class="form-text">Nous n'allons jamais partager votre email.</div>
+                <small class="text-danger">{{ form.email.errors }}</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Mot de passe</label>
+                {{ form.password1 }}
+                <small class="text-danger">{{ form.password1.errors }}</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Répétez le Mot de passe</label>
+                {{ form.password2 }}
+                <small class="text-danger">{{ form.password2.errors }}</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Créer votre compte</button>
+        </form>
+    </div>
+</div>
+<style>
+  .login-page, .register-page {
+    min-height: 100vh;
+    background-image: url('https://www.philippe-friaud-coiffure.fr/wp-content/uploads/2019/05/philippe-friaud-coiffure-chateauroux-coupe.jpg');
+    background-size: contain;  /* garde la taille originale de l'image */
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: bgMove 20s linear infinite; /* animation sur le background */
+}
+
+/* Animation simple : léger zoom et déplacement */
+@keyframes bgMove {
+    0% { background-position: center top; transform: scale(1); }
+    50% { background-position: center center; transform: scale(1.05); }
+    100% { background-position: center top; transform: scale(1); }
+}
+
+.form-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+    max-width: 400px;
+    width: 100%;
+}
+
+
+</style>
+{% endblock %}

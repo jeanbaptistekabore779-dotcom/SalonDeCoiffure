@@ -1,0 +1,64 @@
+{% extends "coiffure/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <span>📅 Liste des Rendez-vous</span>
+            <a href="{% url 'ajouter_rdv' %}" class="btn btn-light btn-sm">+ Ajouter RDV</a>
+        </div>
+        <div class="card-body p-3">
+            <div class="table-responsive">
+                <table class="table table-hover text-center align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>N°</th>
+                            <th>Client</th>
+                            <th>Service</th>
+                            <th>Date</th>
+                            <th>Heure</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rdv in rdvs %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ rdv.client.nom }} {{ rdv.client.prenom }}</td>
+                            <td>{{ rdv.service.libelle }}</td>
+                            <td>{{ rdv.date_rdv|date:"d/m/Y" }}</td>
+                            <td>{{ rdv.heure }}</td>
+                            <td>
+                                {% if rdv.statut == "confirmé" %}
+                                    <span class="badge bg-success">Confirmé</span>
+                                {% elif rdv.statut == "annulé" %}
+                                    <span class="badge bg-danger">Annulé</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">En attente</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'modifier_rdv' rdv.id %}" class="btn btn-warning btn-sm">Modifier</a>
+                                <a href="{% url 'supprimer_rdv' rdv.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Supprimer ce RDV ?');">Supprimer</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">Aucun RDV trouvé.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(to right, #e7eced, #6988a8);
+    }
+</style>
+{% endblock %}

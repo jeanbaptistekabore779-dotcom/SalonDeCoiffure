@@ -1,0 +1,60 @@
+{% extends "coiffure/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">Paramètres de l'application</h1>
+
+    <!-- Section Salon -->
+    <div class="card mb-5 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2 class="h5 mb-0">Salon</h2>
+        </div>
+        <div class="card-body">
+            {% if salons %}
+                {% for salon in salons %}
+                <div class="border-bottom mb-3 pb-3">
+                    <p><strong>Nom:</strong> {{ salon.nom }}</p>
+                    <p><strong>Adresse:</strong> {{ salon.adresse }}</p>
+                    <p><strong>Téléphone:</strong> {{ salon.telephone }}</p>
+                    {% if salon.image %}
+                    <img src="{{ salon.image.url }}" alt="{{ salon.nom }}" class="img-thumbnail mb-2" style="max-width:200px;">
+                    {% endif %}
+                    <div>
+                        <a href="{% url 'modifier_salon' salon.id %}" class="btn btn-sm btn-outline-primary">Modifier</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>Aucun salon trouvé.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Section Services -->
+    <div class="card mb-5 shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h2 class="h5 mb-0">Services</h2>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <a href="{% url 'ajouter_service' %}" class="btn btn-success">Ajouter un service</a>
+            </div>
+            {% if services %}
+                <ul class="list-group">
+                    {% for service in services %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>{{ service.nom }} - {{ service.prix }} FCFA</span>
+                        <div>
+                            <a href="{% url 'modifier_service' service.id %}" class="btn btn-sm btn-outline-primary">Modifier</a>
+                            <a href="{% url 'supprimer_service' service.id %}" class="btn btn-sm btn-outline-danger">Supprimer</a>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Aucun service trouvé.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
