@@ -1,4 +1,4 @@
-
+import dj_database_url
 from pathlib import Path
 from pathlib import Path
 import os
@@ -18,10 +18,18 @@ MEDIA_URL = '/media/'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-5svhf5bc7t$^z7rjtyy=6*3o^spg_yvia!^rlwk+m*-9o@+kvv'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = []
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False # Mode désactivé du debug en pro
+
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'www.salonl3s5.com',
+    'salondecoiffure.onrender.com',  # ajouter cette ligne
+]
 
 AUTH_USER_MODEL = 'coiffure.User'  # 'nom_de_lapp.NomDuModele'
 
@@ -44,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # <-- Ajouter ici
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -51,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'SalonDeCoiffure.urls'
 
@@ -77,13 +87,17 @@ WSGI_APPLICATION = 'SalonDeCoiffure.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Connexion à la DB : SQLite localement, PostgreSQL sur Render
+DATABASES = {
+    'default': dj_database_url.config(
+        default=f'sqlite:///{os.path.join(BASE_DIR, "db.sqlite3")}',
+        conn_max_age=600,
+    )
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -121,6 +135,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # Default primary key field type

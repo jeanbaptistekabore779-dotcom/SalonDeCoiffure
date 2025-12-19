@@ -1,1 +1,1 @@
-web: gunicorn SalonDeCoiffure.wsgi
+web: gunicorn SalonDeCoiffure.wsgi --log-file -

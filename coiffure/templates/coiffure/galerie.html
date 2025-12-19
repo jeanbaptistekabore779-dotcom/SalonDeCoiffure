@@ -1,0 +1,100 @@
+{% extends 'coiffure/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Galerie des modèles de coiffure</h2>
+
+    <!-- Boutons pour changer l'affichage -->
+    <div class="d-flex justify-content-end mb-3">
+        <button id="gridView" class="btn btn-outline-primary me-2">
+            <i class="bi bi-grid-3x3-gap"></i> Grille
+        </button>
+        <button id="listView" class="btn btn-outline-secondary">
+            <i class="bi bi-list"></i> Liste
+        </button>
+    </div>
+
+    <!-- Galerie -->
+    <div id="galleryContainer" class="row">
+        {% for modele in modeles %}
+        <div class="col-md-4 mb-4 gallery-item">
+            <div class="card shadow-sm">
+                <img src="{{ modele.image.url }}" class="card-img-top" alt="{{ modele.nom }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ modele.nom }}</h5>
+                    <p class="card-text">{{ modele.description }}</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Aucun modèle disponible pour le moment.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- CSS -->
+<style>
+.card:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s;
+}
+.card-img-top {
+    height: 250px;
+    object-fit: cover;
+}
+
+/* Mode liste */
+.list-layout .card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.list-layout .card-img-top {
+    width: 200px;
+    height: auto;
+    object-fit: cover;
+    margin-right: 20px;
+}
+.list-layout .card-body {
+    flex: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .list-layout .card {
+        flex-direction: column;
+        text-align: center;
+    }
+    .list-layout .card-img-top {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+}
+</style>
+
+<!-- JS -->
+<script>
+const gridBtn = document.getElementById('gridView');
+const listBtn = document.getElementById('listView');
+const gallery = document.getElementById('galleryContainer');
+
+gridBtn.addEventListener('click', () => {
+    gallery.classList.remove('list-layout');
+    gallery.classList.add('row');
+    document.querySelectorAll('.gallery-item').forEach(item => {
+        item.classList.remove('col-12');
+        item.classList.add('col-md-4');
+    });
+});
+
+listBtn.addEventListener('click', () => {
+    gallery.classList.remove('row');
+    gallery.classList.add('list-layout');
+    document.querySelectorAll('.gallery-item').forEach(item => {
+        item.classList.remove('col-md-4');
+        item.classList.add('col-12');
+    });
+});
+</script>
+{% endblock %}
