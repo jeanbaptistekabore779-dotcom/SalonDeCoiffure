@@ -1,11 +1,12 @@
+
+
 <!doctype html>
 <html lang="fr" dir="ltr">
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Bootstrap & Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -16,55 +17,26 @@
       font-family: "Segoe UI", sans-serif;
       background: linear-gradient(to right, #7f4261, #173339);
       margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     /* NAVBAR */
     .navbar {
       position: sticky;
       top: 0;
-      z-index: 1000;
+      z-index: 1050;
     }
 
-    .navbar .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      height: 38px;
-      font-weight: 500;
-      transition: all 0.3s;
-    }
-
-    .navbar .btn:hover {
-      opacity: 0.9;
-    }
-
-    .btn-success {
-      background-color: #198754 !important;
-      border-color: #198754 !important;
-    }
-
-    .btn-info {
-      background-color: #163a41 !important;
-      border-color: #0dcaf0 !important;
-    }
-
-    .navbar .nav-link {
-      color: #fff !important;
-    }
-
-    .navbar .nav-link.active {
-      color: #fff !important;
-      background-color: transparent !important;
-    }
-
-    /* SIDEBAR */
+    /* SIDEBAR (Desktop) */
     .sidebar {
       height: 100vh;
       background: linear-gradient(to bottom, #6471ad, #5a6091);
       padding-top: 1.5rem;
       border-right: 1px solid #ccc;
       position: sticky;
-      top: 0;
+      top: 56px;
       overflow-y: auto;
       transition: all 0.3s ease;
     }
@@ -93,40 +65,10 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .sidebar .nav-link i {
-      margin-right: 10px;
-      font-size: 1.2rem;
-    }
-
-    .sidebar::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .sidebar::-webkit-scrollbar-thumb {
-      background-color: rgba(255, 255, 255, 0.3);
-      border-radius: 3px;
-    }
-
-    .sidebar::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
     /* CONTENU PRINCIPAL */
     .content-wrapper {
-      min-height: calc(100vh - 70px - 60px);
       padding: 2rem;
-      transition: all 0.3s ease;
-    }
-
-    /* Cards & tables */
-    .card {
-      border-radius: 12px;
-      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    }
-
-    table th,
-    table td {
-      vertical-align: middle !important;
+      flex-grow: 1;
     }
 
     /* FOOTER */
@@ -134,153 +76,119 @@
       background-color: #343a40;
       color: #fff;
       padding: 1rem 0;
-      margin-top: auto;
       text-align: center;
     }
 
     /* RESPONSIVE */
-    @media (max-width: 992px) {
-      .sidebar {
-        position: relative;
-        height: auto;
-        border-right: none;
-      }
-
-      .content-wrapper {
-        padding: 1rem;
-      }
+    @media (max-width: 991px) {
+      .sidebar { display: none; } /* On cache la sidebar fixe sur mobile */
+      .content-wrapper { padding: 1rem; }
     }
 
-    @media (max-width: 768px) {
-      .sidebar {
-        display: none; /* peut devenir menu burger plus tard */
-      }
+    /* Offcanvas Style (Menu mobile coulissant) */
+    .offcanvas {
+      background: linear-gradient(to bottom, #6471ad, #5a6091);
+      color: white;
     }
 
-    /* Menu utilisateur */
-    .nav-item .dropdown-toggle {
-      background: linear-gradient(135deg, #7e5369, #729fa8);
-      color: #fff;
-      border-radius: 8px;
-      transition: all 0.3s;
-    }
-
-    .nav-item .dropdown-toggle:hover {
-      opacity: 0.85;
-    }
-
-    .dropdown-menu a.dropdown-item {
-      font-weight: 500;
-      transition: all 0.2s;
-    }
-
-    .dropdown-menu a.dropdown-item:hover {
-      background-color: #f2f2f2;
-      color: #333;
-    }
-
-    .dropdown-menu i {
-      font-size: 1.1rem;
-    }
+    /* Boutons personnalisés */
+    .btn-success { background-color: #198754 !important; border-color: #198754 !important; }
+    .btn-info { background-color: #163a41 !important; border-color: #0dcaf0 !important; }
   </style>
   {% block extra_css %}{% endblock %}
 </head>
 
 <body>
-  <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container-fluid">
-      <!-- Menu déroulant dans la navbar -->
-<li class="nav-item dropdown">
-    <!-- Navbar brand comme menu -->
-<li class="nav-item dropdown">
-                <a class="navbar-brand dropdown-toggle d-flex align-items-center" href="#" id="mainMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-list" style="font-size: 1.5rem;"></i>
+      <div class="dropdown me-2">
+        <a class="navbar-brand dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+          <i class="bi bi-list fs-3"></i>
         </a>
-        <ul class="dropdown-menu" aria-labelledby="mainMenu">
-            <li>
-                <a class="dropdown-item" href="{% url 'liste_salons' %}">
-                    <i class="bi bi-building me-2"></i> Salon
-                </a>
-            </li>
-            <li>
-                <a class="dropdown-item" href="{% url 'logout' %}">
-                    <i class="bi bi-box-arrow-right me-2"></i> Déconnecter
-                </a>
-            </li>
-            <li>
-                <a class="dropdown-item" href="{% url 'quitter' %}">
-                    <i class="bi bi-x-circle me-2"></i> Quitter
-                </a>
-            </li>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="{% url 'liste_salons' %}"><i class="bi bi-building me-2"></i> Salon</a></li>
+          <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right me-2"></i> Déconnecter</a></li>
+          <li><a class="dropdown-item" href="{% url 'quitter' %}"><i class="bi bi-x-circle me-2"></i> Quitter</a></li>
         </ul>
-
-
-              <!-- Ajouter d'autres liens ici si besoin -->
-          </ul>
-      </li>
+      </div>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav align-items-center">
-          <li class="nav-item"><a class="nav-link" href="/"><i class="bi bi-house-door"></i> Accueil</a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-images"></i> Gallery</a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-info-circle"></i> À propos</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}"><i class="bi bi-telephone"></i> Contactez-nous</a></li>
-        </ul>
-        <a href="{% url 'notifications' %}" class="nav-link position-relative">
-          🔔 Notifications
-          {% if notif_count > 0 %}
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-            {{ notif_count }}
-            <span class="visually-hidden">non lues</span>
-          </span>
-          {% endif %}
-        </a>
 
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="btn btn-success text-white" href="{% url 'login' %}">Connexion</a>
-          </li>
-          <li class="nav-item ms-2">
-            <a class="btn btn-info text-white" href="{% url 'register' %}">Créer un compte</a>
-          </li>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav align-items-center me-auto">
+          <li class="nav-item"><a class="nav-link" href="/"><i class="bi bi-house-door"></i> Accueil</a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-images"></i> Galerie</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}"><i class="bi bi-telephone"></i> Contact</a></li>
         </ul>
+        
+        <div class="d-flex align-items-center">
+            <a href="{% url 'notifications' %}" class="nav-link position-relative me-3">
+              <i class="bi bi-bell fs-5 text-white"></i>
+              {% if notif_count > 0 %}
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ notif_count }}
+              </span>
+              {% endif %}
+            </a>
+            <ul class="navbar-nav">
+              <li class="nav-item"><a class="btn btn-success text-white btn-sm px-3 me-2" href="{% url 'login' %}">Connexion</a></li>
+              <li class="nav-item"><a class="btn btn-info text-white btn-sm px-3" href="{% url 'register' %}">Compte</a></li>
+            </ul>
+        </div>
       </div>
     </div>
   </nav>
 
   <div class="container-fluid">
     <div class="row">
-      <!-- SIDEBAR -->
-      <div class="col-lg-2 col-md-3 sidebar">
+      <nav class="col-lg-2 sidebar d-none d-lg-block">
         <ul class="nav flex-column">
-          <li class="nav-item"><a class="nav-link {% if request.path == '/tablebord/' %}active{% endif %}" href="{% url 'tablebord' %}"><i class="bi bi-speedometer2"></i> Tableau de bord</a></li>
-          <li class="nav-item"><a class="nav-link {% if request.path == '/clients/' %}active{% endif %}" href="{% url 'liste_clients' %}"><i class="bi bi-people-fill"></i> Clients</a></li>
-          <li class="nav-item"><a class="nav-link {% if request.path == '/rdv/' %}active{% endif %}" href="{% url 'liste_rdv' %}"><i class="bi bi-calendar-check"></i> Rendez-vous</a></li>
-          <li class="nav-item"><a class="nav-link {% if request.path == '/services/' %}active{% endif %}" href="{% url 'liste_services' %}"><i class="bi bi-scissors"></i> Services</a></li>
-          <li class="nav-item"><a class="nav-link {% if request.path == '/produits/' %}active{% endif %}" href="{% url 'liste_produits' %}"><i class="bi bi-basket"></i> Produits</a></li>
+          <li class="nav-item"><a class="nav-link {% if '/tablebord/' in request.path %}active{% endif %}" href="{% url 'tablebord' %}"><i class="bi bi-speedometer2"></i> Tableau de Bord</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'liste_clients' %}"><i class="bi bi-people-fill"></i> Clients</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'liste_rdv' %}"><i class="bi bi-calendar-check"></i> Rendez-vous</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'liste_services' %}"><i class="bi bi-scissors"></i> Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'liste_produits' %}"><i class="bi bi-basket"></i> Produits</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'liste_employes' %}"><i class="bi bi-person-vcard"></i> Employés</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'liste_paiements' %}"><i class="bi bi-credit-card"></i> Paiements</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'liste_salons' %}"><i class="bi bi-building"></i> Salons</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'liste_modeles' %}"><i class="bi bi-card-list"></i> Modèles</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'liste_prestations' %}"><i class="bi bi-stars"></i> Prestations</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'parametre' %}"><i class="bi bi-gear"></i> Paramètres</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'rapport' %}"><i class="bi bi-file-earmark-bar-graph"></i> Rapport</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'rapport' %}"><i class="bi bi-file-earmark-bar-graph"></i> Rapports</a></li>
         </ul>
+      </nav>
+
+      <div class="d-lg-none mt-3 px-3">
+        <button class="btn btn-light shadow-sm w-100" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+          <i class="bi bi-grid-fill me-2"></i> Menu de gestion
+        </button>
       </div>
 
-      <!-- CONTENU PRINCIPAL -->
-      <div class="col-lg-10 col-md-9 content-wrapper">
+      <main class="col-lg-10 content-wrapper">
         {% block content %}{% endblock %}
-      </div>
+      </main>
     </div>
   </div>
 
-  <footer class="text-center">
-    &copy; {{ year|default:2025 }} Tout droit réservé, Groupe 4
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenu">
+    <div class="offcanvas-header border-bottom">
+      <h5 class="offcanvas-title">Gestion Salon</h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+      <ul class="nav flex-column sidebar-mobile">
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'tablebord' %}"><i class="bi bi-speedometer2 me-2"></i> Tableau de bord</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'liste_clients' %}"><i class="bi bi-people-fill me-2"></i> Clients</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'liste_rdv' %}"><i class="bi bi-calendar-check me-2"></i> Rendez-vous</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'liste_services' %}"><i class="bi bi-scissors me-2"></i> Services</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="{% url 'liste_produits' %}"><i class="bi bi-basket me-2"></i> Produits</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    &copy; {{ year|default:2025 }} Tout droit réservé, Groupe 4 L3S5 UJKZ
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

@@ -1,79 +1,194 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste des salons</title>
-</head>
-<body>
-    {% extends "coiffure/base.html" %}
+{% extends "coiffure/base.html" %}
 {% load static %}
 
 {% block content %}
 
 <style>
-    .salon-card { transition: 0.2s ease; border-radius: 12px; overflow: hidden; }
-    .salon-card:hover { transform: translateY(-5px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
-    .salon-img { height: 200px; object-fit: cover; width: 100%; }
-    .salon-title { font-weight: 600; color: #333; }
-    .salon-info { font-size: 0.9rem; color: #555; }
+/* Styles généraux */
+body {
+    background: linear-gradient(to right, #e7eced, #6988a8);
+}
+
+/* Styles des cartes */
+.salon-card { 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    border-radius: 12px; 
+    overflow: hidden; 
+}
+.salon-card:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2); 
+}
+.salon-img { 
+    height: 200px; 
+    object-fit: cover; 
+    width: 100%; 
+    border-radius: 8px;
+}
+.salon-title { 
+    font-weight: 600; 
+    color: #333; 
+}
+.salon-info { 
+    font-size: 0.9rem; 
+    color: #555; 
+}
+
+/* Boutons active/inactive */
+.view-btn {
+    margin-right: 5px;
+}
+.view-btn.active {
+    color: #fff;
+}
 </style>
 
 <div class="container mt-5">
 
+    <!-- En-tête avec boutons de switch -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Liste des Salons</h2>
-        <a href="{% url 'ajouter_salon' %}" class="btn btn-success">
-            + Ajouter un Salon
-        </a>
+        <div>
+            <button id="btn-table" class="btn btn-outline-primary view-btn active">Table</button>
+            <button id="btn-gallery" class="btn btn-outline-success view-btn">Galerie</button>
+            <a href="{% url 'ajouter_salon' %}" class="btn btn-success">+ Ajouter un Salon</a>
+        </div>
     </div>
 
-    <div class="row">
+    <!-- Vue Tableau améliorée -->
+        <div id="table-view" class="card shadow-sm">
 
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark sticky-top">
+                        <tr>
+                            <th>N°</th>
+                            <th>Salon</th>
+                            <th>Contact</th>
+                            <th>Email</th>
+                            <th>Horaires</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for salon in salons %}
+                        <tr>
+                            <td class="fw-bold">{{ forloop.counter }}</td>
+
+                            <td>
+                                <strong>{{ salon.nom }}</strong><br>
+                                <small class="text-muted">{{ salon.adresse }}</small>
+                            </td>
+
+                            <td>
+                                <span class="badge bg-info text-dark">
+                                    {{ salon.telephone }}
+                                </span>
+                            </td>
+
+                            <td>{{ salon.email }}</td>
+
+                            <td>
+                                <span class="badge bg-success">
+                                    {{ salon.horaire_ouverture }}
+                                </span>
+                                →
+                                <span class="badge bg-danger">
+                                    {{ salon.horaire_fermeture }}
+                                </span>
+                            </td>
+
+                            <td class="text-center">
+                                <a href="{% url 'detail_salon' salon.id %}" 
+                                class="btn btn-sm btn-outline-primary" title="Voir">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+
+                                <a href="{% url 'modifier_salon' salon.id %}" 
+                                class="btn btn-sm btn-outline-warning" title="Modifier">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+
+                                <a href="{% url 'supprimer_salon' salon.id %}" 
+                                class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('Supprimer ce salon ?')" title="Supprimer">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                Aucun salon disponible.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    <!-- Vue Galerie -->
+    <div id="gallery-view" class="row" style="display:none;">
         {% for salon in salons %}
         <div class="col-md-4 mb-4">
             <div class="card salon-card h-100">
-
                 {% if salon.image %}
                 <img src="{{ salon.image.url }}" class="salon-img" alt="Image du salon">
                 {% else %}
-                <img src="{% static 'images/default_salon.png' %}" class="salon-img">
+                <img src="{% static 'images/default_salon.png' %}" class="salon-img" alt="Image par défaut">
                 {% endif %}
 
                 <div class="card-body">
-
                     <h5 class="salon-title">{{ salon.nom }}</h5>
-
                     <p class="salon-info">
                         <strong>Adresse :</strong> {{ salon.adresse }} <br>
                         <strong>Téléphone :</strong> {{ salon.telephone }} <br>
                         <strong>Email :</strong> {{ salon.email }} <br>
                         <strong>Ouverture :</strong> {{ salon.horaire_ouverture }} <br>
-                        <strong>Fermeture :</strong> {{ salon.horaire_fermeture }} <br>
+                        <strong>Fermeture :</strong> {{ salon.horaire_fermeture }}
                     </p>
-
                     <div class="d-flex justify-content-between">
                         <a href="{% url 'detail_salon' salon.id %}" class="btn btn-primary btn-sm">Voir</a>
                         <a href="{% url 'modifier_salon' salon.id %}" class="btn btn-warning btn-sm">Modifier</a>
                         <a href="{% url 'supprimer_salon' salon.id %}" class="btn btn-danger btn-sm"
                            onclick="return confirm('Supprimer ce salon ?')">Supprimer</a>
                     </div>
-
                 </div>
             </div>
         </div>
+        {% empty %}
+        <p class="text-center">Aucun salon disponible.</p>
         {% endfor %}
     </div>
 
 </div>
 
-<style>
-    body {
-        background: linear-gradient(to right, #e7eced, #6988a8);
+<script>
+// Switch entre Table et Galerie avec toggle active
+const btnTable = document.getElementById('btn-table');
+const btnGallery = document.getElementById('btn-gallery');
+const tableView = document.getElementById('table-view');
+const galleryView = document.getElementById('gallery-view');
+
+function switchView(view) {
+    if(view === 'table') {
+        tableView.style.display = 'block';
+        galleryView.style.display = 'none';
+        btnTable.classList.add('active');
+        btnGallery.classList.remove('active');
+    } else {
+        tableView.style.display = 'none';
+        galleryView.style.display = 'flex';
+        btnGallery.classList.add('active');
+        btnTable.classList.remove('active');
     }
-</style>
+}
+
+btnTable.addEventListener('click', () => switchView('table'));
+btnGallery.addEventListener('click', () => switchView('gallery'));
+</script>
 
 {% endblock %}
-
-</body>
-</html>
