@@ -11,6 +11,7 @@ class User(AbstractUser):
     ROLE_CHOICES = [
         ('admin', 'Administrateur'),
         ('employe', 'Employé'),
+        ('client', 'Client'),
     ]
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='employe')
 
@@ -45,24 +46,41 @@ class Salon(models.Model):
 # =============================
 # CLIENT
 # =============================
-
+# =============================
+# CLIENT
+# =============================
 class Client(models.Model):
+    # Relation vers User : un client est lié à un compte utilisateur
+    user = models.OneToOneField(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name="profil_client", # Corrigé (était profil_employe)
+        null=True, 
+        blank=True
+    )
     nom = models.CharField(max_length=50)
     prenom = models.CharField(max_length=50)
     telephone = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
     date_inscription = models.DateField(auto_now_add=True)
-    statut = models.CharField(max_length=20, default="actif")  # actif / inactif
-    actif = models.BooleanField(default=True)  # ← AJOUT
+    statut = models.CharField(max_length=20, default="actif")
+    actif = models.BooleanField(default=True)
+
     def __str__(self):
         return f"{self.nom} {self.prenom}"
 
 # =============================
 # EMPLOYÉ
 # =============================
-
-
 class Employe(models.Model):
+    # Relation vers User : un employé est lié à un compte utilisateur
+    user = models.OneToOneField(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name="profil_employe", # Corrigé (était profil_client)
+        null=True, 
+        blank=True
+    )
     nom = models.CharField(max_length=50)
     prenom = models.CharField(max_length=50)
     telephone = models.CharField(max_length=20)
@@ -72,7 +90,6 @@ class Employe(models.Model):
 
     def __str__(self):
         return f"{self.nom} {self.prenom}"
-
 # =============================
 # SERVICE
 # =============================

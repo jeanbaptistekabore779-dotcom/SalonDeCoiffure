@@ -1,41 +1,56 @@
+# 1. Django Core & Shortcuts
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
-from .models import Client, Produit, Employe, Service, RendezVous, Salon, Prestation, Paiement
-from .forms import PrestationForm, ServiceForm, SalonForm, EmployeForm, PaiementForm, ProduitForm, RendezVousForm
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.template.loader import get_template
-from xhtml2pdf import pisa
-from .models import Paiement
-from .forms import RegisterForm
-from django.contrib.auth import authenticate, login
-from .forms import LoginForm
-from datetime import date
-from django.db import models
-from .models import ModeleCoiffure
-from .forms import ModeleCoiffureForm
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
-from django.shortcuts import render
-from django.utils import timezone
-from .models import Client, Produit, RendezVous, Paiement 
+
+# 2. Authentification & Utilisateurs
+from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required # Important pour la gestion
+User = get_user_model()
+
+# 3. Vos Modèles
+from .models import (
+    Client, Produit, Employe, Service, RendezVous, 
+    Salon, Prestation, Paiement, ModeleCoiffure
+)
 from notifications.models import Notification
 
+# 4. Vos Formulaires
+from .forms import (
+    PrestationForm, ServiceForm, SalonForm, EmployeForm, 
+    PaiementForm, ProduitForm, RendezVousForm, RegisterForm, 
+    LoginForm, ModeleCoiffureForm
+)
+
+# 5. Utilitaires tiers (PDF, etc.)
+from xhtml2pdf import pisa
+from datetime import date
 
 # =============================
 # PAGE D'ACCUEIL
 # =============================
+@login_required
 def home(request):
-    return render(request, "coiffure/home.html")
+    # On initialise les variables pour éviter des erreurs dans le template
+    user_role = None
+    
+    # Si l'utilisateur est connecté, on récupère son rôle lisible (ex: Administrateur)
+    if request.user.is_authenticated:
+        user_role = request.user.get_role_display()
+    
+    context = {
+        'user_role': user_role,
+    }
+    return render(request, "coiffure/home.html", context)
 
 def login_view(request):
     return render(request, "coiffure/login.html")
 
 @login_required
-
-
 def tablebord(request):
 
     total_clients = Client.objects.count()
@@ -70,6 +85,8 @@ def tablebord(request):
     }
 
     return render(request, "coiffure/tablebord.html", context)
+
+
 
 
 # =============================
@@ -132,6 +149,7 @@ def supprimer_client(request, id):
 # =============================
 # PRODUITS – CRUD
 # =============================
+
 def liste_produits(request):
     produits = Produit.objects.all()
     return render(request, "coiffure/produit/liste_produits.html", {"produits": produits})
@@ -175,6 +193,7 @@ def supprimer_produit(request, id):
 # =============================
 # EMPLOYÉS – CRUD
 # =============================
+
 def liste_employes(request):
     employes = Employe.objects.all()
     return render(request, "coiffure/employe/liste_employes.html", {"employes": employes})
@@ -228,6 +247,7 @@ def ajouter_service(request):
     return render(request, 'coiffure/service/ajouter_service.html', {'form': form})
 
 def modifier_service(request, id):
+
     # Récupère le service à modifier
     service = get_object_or_404(Service, id=id)
 
@@ -252,11 +272,11 @@ def supprimer_service(request, id):
 # =============================
 # RENDEZ-VOUS – CRUD
 # =============================
-@login_required
+
+
 def liste_rdv(request):
     rdvs = RendezVous.objects.all()
     return render(request, "coiffure/rdv/liste_rdv.html", {"rdvs": rdvs})
-
 
 @login_required
 def ajouter_rdv(request):
@@ -287,7 +307,6 @@ def ajouter_rdv(request):
         "services": services
     })
 
-
 @login_required
 def modifier_rdv(request, id):
     rdv = get_object_or_404(RendezVous, id=id)
@@ -317,7 +336,6 @@ def modifier_rdv(request, id):
         "clients": clients,
         "services": services
     })
-
 
 @login_required
 def supprimer_rdv(request, id):
@@ -350,11 +368,6 @@ def ajouter_salon(request):
         form = SalonForm()
     return render(request, 'coiffure/salon/ajouter_salon.html', {'form': form})
 
-
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Salon
-from .forms import SalonForm
-
 def modifier_salon(request, id):
     salon = get_object_or_404(Salon, pk=id)
     
@@ -371,7 +384,6 @@ def modifier_salon(request, id):
 
     return render(request, 'coiffure/salon/modifier_salon.html', {'form': form, 'salon': salon})
 
-
 def supprimer_salon(request, id):
     salon = get_object_or_404(Salon, id=id)
     salon.delete()
@@ -385,7 +397,6 @@ def supprimer_salon(request, id):
 def liste_prestations(request):
     prestations = Prestation.objects.all()
     return render(request, 'coiffure/prestation/liste_prestations.html', {'prestations': prestations})
-
 
 def ajouter_prestation(request):
     if request.method == 'POST':
@@ -455,14 +466,11 @@ def supprimer_paiement(request, id):
     messages.warning(request, "Paiement supprimé")
     return redirect('liste_paiements')
 
-def contact(request):
-    return render(request, 'coiffure/contact.html', {})
-
-def detail_salon(request, id):
-    salon = get_object_or_404(Salon, id=id)
-    return render(request, "coiffure/salon/detail_salon.html", {"salon": salon})
 
 
+# =============================
+# PAIEMENT – Autres methodes
+# =============================
 def facture_pdf(request, paiement_id):
     paiement = Paiement.objects.get(id=paiement_id)
 
@@ -478,9 +486,6 @@ def facture_pdf(request, paiement_id):
     if pisa_status.err:
         return HttpResponse('Erreur lors de la création PDF')
     return response
-
-from django.shortcuts import render, get_object_or_404
-from .models import Paiement
 
 def detail_paiement(request, paiement_id):
     paiement = get_object_or_404(Paiement, id=paiement_id)
@@ -516,8 +521,6 @@ def login_view(request):
         form = LoginForm()
 
     return render(request, "coiffure/login.html", {"form": form})
-from django.db.models import Sum
-from datetime import date
 
 def rapport_view(request):
     salons = Salon.objects.all()
@@ -544,8 +547,6 @@ def rapport_view(request):
         'date': date.today(),
     })
 
-
-
 def parametre_view(request):
     # Récupère tous les salons
     salons = Salon.objects.all()
@@ -554,7 +555,6 @@ def parametre_view(request):
     context = {'salons': salons}
     
     return render(request, 'parametre.html', context)
-
 
 def liste_modeles(request):
     modeles = ModeleCoiffure.objects.all()
@@ -591,7 +591,7 @@ def supprimer_modele(request, id):
     modele.delete()
     return redirect("liste_modeles")
 
-
+# Prise de Rendez vous
 def prendre_rendezvous(request):
     if request.method == "POST":
         form = RendezVousForm(request.POST)
@@ -610,15 +610,10 @@ def prendre_rendezvous(request):
 
     return render(request, "coiffure/rendezvous.html", {"form": form})
 
-
-from django.contrib.auth import logout
-from django.shortcuts import redirect
-
 def deconnexion(request):
     logout(request)  # Déconnecte l'utilisateur
     return redirect('login')  # Redirige vers la page de connexion
 
-from django.shortcuts import render
 
 def quitter(request):
     """
@@ -627,7 +622,13 @@ def quitter(request):
     return render(request, "quitter.html")
 
 
-from django.contrib.auth.decorators import login_required
+def contact(request):
+    return render(request, 'coiffure/contact.html', {})
+
+def detail_salon(request, id):
+    salon = get_object_or_404(Salon, id=id)
+    return render(request, "coiffure/salon/detail_salon.html", {"salon": salon})
+
 
 @login_required
 def lire_notification(request, notif_id):
@@ -642,9 +643,6 @@ def lire_notification(request, notif_id):
     return redirect('tablebord')
 
 
-from django.contrib.auth.decorators import login_required
-from .models import Notification  # Assure-toi que c’est bien ton modèle Notification
-
 @login_required
 def mark_as_read(request, notif_id):
     """
@@ -654,3 +652,31 @@ def mark_as_read(request, notif_id):
     notif.lu = True
     notif.save()
     return redirect('tablebord')  # ou vers la page de ton choix
+
+@login_required
+@staff_member_required
+def utilisateur_profil(request):
+    # On réutilise la logique du tableau de bord ou on affiche le profil
+    return render(request, 'coiffure/utilisateur.html', {
+        'user': request.user
+    })
+
+    from django.contrib.auth.models import User
+from django.contrib.admin.views.decorators import staff_member_required
+
+@login_required
+@staff_member_required # Seuls les admins peuvent accéder à cette page
+def liste_utilisateurs(request):
+    utilisateurs = User.objects.all().order_by('-date_joined')
+    return render(request, "utilisateur/liste_utilisateurs.html", {
+        "utilisateurs": utilisateurs
+    })
+
+@login_required
+@staff_member_required
+def supprimer_utilisateur(request, id):
+    user_to_delete = get_object_or_404(User, id=id)
+    if user_to_delete != request.user: # Empêcher de se supprimer soi-même
+        user_to_delete.delete()
+        messages.warning(request, "Utilisateur supprimé.")
+    return redirect("utilisateur/liste_utilisateurs")

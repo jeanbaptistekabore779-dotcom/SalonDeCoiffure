@@ -58,6 +58,15 @@
         </div>
     </div>
 </div>
+<th>Compte User</th>
+
+<td>
+    {% if client.user %}
+        <span class="badge bg-info text-dark">{{ client.user.username }}</span>
+    {% else %}
+        <span class="text-muted">Aucun</span>
+    {% endif %}
+</td>
 
 <style>
     body {

@@ -22,7 +22,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False # Mode désactivé du debug en pro
+DEBUG = True # Mode désactivé du debug en pro
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
@@ -88,9 +88,6 @@ WSGI_APPLICATION = 'SalonDeCoiffure.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
 # Connexion à la DB : SQLite localement, PostgreSQL sur Render
 DATABASES = {
     'default': dj_database_url.config(
@@ -155,7 +152,16 @@ LOGOUT_REDIRECT_URL = '/connectez-vous/'
 
 
 # Configuration indispensable pour Render (HTTPS)
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = ['https://salondecoiffure.onrender.com']
+# À mettre tout à la fin de settings.py
+if not DEBUG:
+    # Paramètres pour Render (Production)
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    CSRF_TRUSTED_ORIGINS = ['https://salondecoiffure.onrender.com']
+else:
+    # Paramètres pour le développement local
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    SECURE_SSL_REDIRECT = False

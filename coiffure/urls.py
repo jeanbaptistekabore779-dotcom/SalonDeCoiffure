@@ -2,6 +2,7 @@ from django.urls import path, include
 from . import views 
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.models import User
 
 urlpatterns = [
     path('', views.home, name="home"),
@@ -12,7 +13,12 @@ urlpatterns = [
     path('contact/', views.contact, name="contact"),
     path('rapport/', views.rapport_view, name="rapport"),
     path('parametre/', views.parametre_view, name='parametre'),
-
+    
+    path('utilisateur/', views.utilisateur_profil, name='Utilisateur'),
+    path('utilisateurs/liste/', views.liste_utilisateurs, name='liste_utilisateurs'),
+    path('utilisateurs/supprimer/<int:id>/', views.supprimer_utilisateur, name='supprimer_utilisateur'),
+   
+   
     path('notifications/', include('notifications.urls')),
     path('notification/lire/<int:notif_id>/', views.lire_notification, name='lire_notification'),
     path('notifications/read/<int:notif_id>/', views.mark_as_read, name='mark_as_read'),

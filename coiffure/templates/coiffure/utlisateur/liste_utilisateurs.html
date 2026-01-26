@@ -1,0 +1,51 @@
+{% extends "coiffure/base.html" %} <main class="main">
+    <div class="topbar">
+        <h2><i class="bi bi-people-fill me-2"></i> Gestion du Personnel</h2>
+        <a href="{% url 'register' %}" class="btn">Ajouter un utilisateur</a>
+    </div>
+
+    <section class="card mt-3">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Avatar</th>
+                        <th>Nom d'utilisateur</th>
+                        <th>Email</th>
+                        <th>Rôle</th>
+                        <th>Dernière connexion</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in utilisateurs %}
+                    <tr>
+                        <td>
+                            <div class="avatar" style="width:35px; height:35px; font-size:14px;">
+                                {{ u.username|slice:":1"|upper }}
+                            </div>
+                        </td>
+                        <td><strong>{{ u.username }}</strong></td>
+                        <td class="muted">{{ u.email }}</td>
+                        <td>
+                            {% if u.is_superuser %}
+                                <span class="badge" style="background:#f1c40f; color:#000; padding:2px 8px; border-radius:5px; font-size:11px;">ADMIN</span>
+                            {% else %}
+                                <span class="badge" style="background:#34495e; color:#fff; padding:2px 8px; border-radius:5px; font-size:11px;">STAFF</span>
+                            {% endif %}
+                        </td>
+                        <td class="muted">{{ u.last_login|date:"d/m/Y H:i"|default:"Jamais" }}</td>
+                        <td>
+                            {% if u != request.user %}
+                            <a href="{% url 'supprimer_utilisateur' u.id %}" onclick="return confirm('Supprimer cet accès ?')" style="color:#e74c3c;">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
