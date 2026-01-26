@@ -18,11 +18,11 @@ MEDIA_URL = '/media/'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-5svhf5bc7t$^z7rjtyy=6*3o^spg_yvia!^rlwk+m*-9o@+kvv'
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
-DEBUG = os.environ.get("DEBUG", "True") == "True"
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-secret-key")
+DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True # Mode désactivé du debug en pro
+
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
@@ -91,10 +91,12 @@ WSGI_APPLICATION = 'SalonDeCoiffure.wsgi.application'
 # Connexion à la DB : SQLite localement, PostgreSQL sur Render
 DATABASES = {
     'default': dj_database_url.config(
-        default=f'sqlite:///{os.path.join(BASE_DIR, "db.sqlite3")}',
+        default=os.environ.get("DATABASE_URL"),
         conn_max_age=600,
+        ssl_require=True
     )
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -165,3 +167,5 @@ else:
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
     SECURE_SSL_REDIRECT = False
+
+
